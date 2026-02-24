@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPDB Pondok Pesantren Al-Mansyurati NW PRO</title>
+<style>
+body{margin:0;font-family:Arial;background:linear-gradient(135deg,#0f9d58,#ffffff);} 
+.container{max-width:950px;margin:40px auto;background:white;padding:30px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.2);} 
+.header{text-align:center}
+.header img{width:120px}
+input,select,textarea{width:100%;padding:10px;margin:6px 0 15px;border-radius:8px;border:1px solid #ccc}
+button{background:#0f9d58;color:white;padding:12px;border:none;border-radius:8px;cursor:pointer}
+.nav{display:flex;gap:10px;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}
+th{background:#0f9d58;color:white}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<img src="logo.png.png">
+<h2>SPMB</h2>
+<h3>Pondok Pesantren Al-Mansyurati NW</h3>
+<h4>Tahun Pelajaran 2026/2027</h4>
+</div>
+
+<div id="loginPage">
+<h3>Login Admin</h3>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<div id="main" style="display:none">
+<div class="nav">
+<button onclick="showForm()">Formulir Pendaftaran</button>
+<button onclick="showAdmin()">Admin</button>
+</div>
+
+<div id="formPage">
+<form id="ppdbForm">
+<select id="lembaga" required><option value="">Pilih Lembaga</option><option>MA</option><option>MTs</option></select>
+<input id="nik" placeholder="NIK" required>
+<input id="nisn" placeholder="NISN" required>
+<input id="nama" placeholder="Nama" required>
+<input id="tempat" placeholder="Tempat Lahir" required>
+<input id="tgl" type="date" required>
+<select id="jk" required><option value="">JK</option><option>Laki-laki</option><option>Perempuan</option></select>
+<input id="asal" placeholder="Asal Sekolah" required>
+<textarea id="alamat" placeholder="Alamat" required></textarea>
+<input id="saudara" type="number" placeholder="Jumlah Saudara" required>
+<input id="hp" placeholder="HP" required>
+<input id="ayah" placeholder="Ayah" required>
+<input id="ibu" placeholder="Ibu" required>
+<label>Upload Berkas</label>
+<input id="berkas" type="file">
+<button type="submit">Daftar</button>
+<button type="button" onclick="wa()">Kirim ke WhatsApp</button>
+</form>
+</div>
+
+<div id="adminPage" style="display:none">
+<h3>Data</h3>
+<table id="tbl"><thead><tr><th>Nama</th><th>Lembaga</th><th>HP</th></tr></thead><tbody></tbody></table>
+<button onclick="pdf()">Cetak PDF</button>
+<button onclick="hapus()">Hapus</button>
+</div>
+</div>
+</div>
+
+<script>
+const ADMIN_USER='admin';
+const ADMIN_PASS='12345';
+function login(){if(user.value==ADMIN_USER && pass.value==ADMIN_PASS){loginPage.style.display='none';main.style.display='block'}else alert('Login gagal')}
+
+ppdbForm.addEventListener('submit',e=>{e.preventDefault();
+let data={nama:nama.value,lembaga:lembaga.value,hp:hp.value};
+let list=JSON.parse(localStorage.getItem('ppdb')||'[]');
+list.push(data);localStorage.setItem('ppdb',JSON.stringify(list));alert('Berhasil');load();ppdbForm.reset();});
+
+function load(){let list=JSON.parse(localStorage.getItem('ppdb')||'[]');let tb=document.querySelector('#tbl tbody');tb.innerHTML='';list.forEach(d=>tb.innerHTML+=`<tr><td>${d.nama}</td><td>${d.lembaga}</td><td>${d.hp}</td></tr>`)}
+function showAdmin(){formPage.style.display='none';adminPage.style.display='block';load()}
+function showForm(){formPage.style.display='block';adminPage.style.display='none'}
+function hapus(){localStorage.removeItem('ppdb');load()}
+function pdf(){window.print()}
+function wa(){let text=`Pendaftaran PPDB%0ANama:${nama.value}%0ALembaga:${lembaga.value}`;window.open('https://wa.me/6281917806389?text='+text)}
+</script>
+</body>
+</html>
